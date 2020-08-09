@@ -14,13 +14,27 @@
                     {{-- 投稿内容 --}}
                     <p class="mb-0">{!! nl2br(e($micropost->content)) !!}</p>
                 </div>
-                <div>
-                    @if (Auth::id() == $micropost->user_id)
-                        {{-- 投稿削除ボタンのフォーム --}}
-                        {!! Form::open(['route' => ['microposts.destroy', $micropost->id], 'method' => 'delete']) !!}
-                            {!! Form::submit('delete', ['class' => 'btn btn-danger btn-sm']) !!}
-                        {!! Form::close() !!}
-                    @endif
+                <div class="d-flex">
+                    <div class="pr-2">
+                        {{-- お気に入りボタンのフォーム --}}
+                        @if (!Auth::user()->is_favorite($micropost->id))
+                            {!! Form::open(['route' => ['favorites.favorite', $micropost->id], 'method' => 'post']) !!}
+                                {!! Form::submit('Favorite', ['class' => 'btn btn-primary btn-sm']) !!}
+                            {!! Form::close() !!}
+                        @else
+                            {!! Form::open(['route' => ['favorites.unfavorite', $micropost->id], 'method' => 'delete']) !!}
+                                {!! Form::submit('Unfavorite', ['class' => 'btn btn-danger btn-sm']) !!}
+                            {!! Form::close() !!}
+                       @endif
+                    </div>
+                    <div class="pr-2">
+                        @if (Auth::id() == $micropost->user_id)
+                            {{-- 投稿削除ボタンのフォーム --}}
+                            {!! Form::open(['route' => ['microposts.destroy', $micropost->id], 'method' => 'delete']) !!}
+                                {!! Form::submit('delete', ['class' => 'btn btn-danger btn-sm']) !!}
+                            {!! Form::close() !!}
+                        @endif
+                    </div>
                 </div>
             </div>
         </li>
